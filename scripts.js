@@ -44,17 +44,30 @@ new Chart(document.getElementById('trendIssuesChart'),{type:'line',data:{labels:
   clr&&clr.addEventListener('click',function(){inp.value='';filter();inp.focus();});
 })();
 
-// ========== 网格拖拽滚动 ==========
+// ========== 网格拖拽滚动 + 刊名列固定 ==========
 (function(){
   document.querySelectorAll('.grid-table').forEach(function(el){
     var is=false,sx=0,sl=0;
+    // 刊名列 transform 补偿（适配所有浏览器）
+    function fixLabels(){
+      var dx=el.scrollLeft;
+      el.querySelectorAll('.grid-label').forEach(function(lb){
+        lb.style.transform='translateX('+dx+'px)';
+        lb.style.WebkitTransform='translateX('+dx+'px)';
+      });
+    }
+    el.addEventListener('scroll',fixLabels);
     el.addEventListener('mousedown',function(e){
       if(e.target.closest('.gs-clickable'))return;
       is=true;el.classList.add('grabbing');sx=e.pageX-el.offsetLeft;sl=el.scrollLeft;e.preventDefault();
     });
     el.addEventListener('mouseleave',function(){is=false;el.classList.remove('grabbing');});
     el.addEventListener('mouseup',function(){is=false;el.classList.remove('grabbing');});
-    el.addEventListener('mousemove',function(e){if(!is)return;var x=e.pageX-el.offsetLeft;el.scrollLeft=sl-(x-sx)*1.5;});
+    el.addEventListener('mousemove',function(e){
+      if(!is)return;
+      var x=e.pageX-el.offsetLeft;el.scrollLeft=sl-(x-sx)*1.5;
+    });
+    fixLabels(); // 初始执行
   });
 })();
 
