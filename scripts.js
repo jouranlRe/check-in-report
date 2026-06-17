@@ -128,17 +128,35 @@ function extractPct(v){var m=v.match(/(\d+(?:\.\d+)?)%/);return m?parseFloat(m[1
     popup.innerHTML='<button class="gp-close" onclick="hideGridPopup()">✕</button><div class="gp-head"><div class="gp-color-indicator" id="gpColor">1</div><div><div class="gp-title" id="gpTitle"></div><div class="gp-meta" id="gpMeta"></div></div></div><div class="gp-body" id="gpBody"></div>';
     document.body.appendChild(popup);overlay.addEventListener('click',hideGridPopup);
   }
+  // 从时间线中查找到刊时间
+  function findCheckInDate(name, issue){
+    var items=document.querySelectorAll('.timeline-item');
+    var n=name.toLowerCase();
+    for(var i=0;i<items.length;i++){
+      var txt=items[i].textContent.trim();
+      var nm=txt.split(':')[0].trim().toLowerCase();
+      if(nm!==n)continue;
+      var im=txt.match(/(\d+)\s*期/);
+      if(!im||im[1]!==issue)continue;
+      var p=items[i].parentElement;
+      while(p&&!p.classList.contains('timeline-date'))p=p.previousElementSibling;
+      if(p&&p.classList.contains('timeline-date'))return p.textContent.trim();
+    }
+    return '—';
+  }
+
   window.showGridDetail=function(el){
     ensurePopup();
     var title=el.getAttribute('title')||'第X期：未知',row=el.closest('.grid-row');
     var journalName=row?row.querySelector('.grid-label').textContent.trim():'',issueNum=el.textContent.trim(),bgColor=el.style.backgroundColor||'#d0d0d0';
-    var statusText='未到', dateText='—';
-    if(title.indexOf('已签收')!==-1){statusText='✓ 已签收';dateText='已签收';}
-    else if(title.indexOf('合刊')!==-1){statusText='≋ 合刊';dateText='见合刊说明';}
-    else if(title.indexOf('停刊')!==-1){statusText='⊗ 停刊';dateText='停刊中';}
+    var statusText='未到';
+    if(title.indexOf('已签收')!==-1)statusText='✓ 已签收';
+    else if(title.indexOf('合刊')!==-1)statusText='≋ 合刊';
+    else if(title.indexOf('停刊')!==-1)statusText='⊗ 停刊';
+    var checkinDate=findCheckInDate(journalName, issueNum);
     document.getElementById('gpColor').textContent=issueNum;document.getElementById('gpColor').style.background=bgColor;
     document.getElementById('gpTitle').textContent=journalName;document.getElementById('gpMeta').textContent='第'+issueNum+'期';
-    document.getElementById('gpBody').innerHTML='<div style="display:flex;flex-direction:column;gap:8px"><span class="gp-status">'+statusText+'</span><div style="font-size:13px;color:#888"><span style="color:#555;font-weight:500">到刊时间：</span>'+dateText+'</div></div>';
+    document.getElementById('gpBody').innerHTML='<div style="display:flex;flex-direction:column;gap:8px"><span class="gp-status">'+statusText+'</span><div style="font-size:13px;color:#888"><span style="color:#555;font-weight:500">到刊时间：</span>'+checkinDate+'</div></div>';
     popup.classList.add('show');overlay.classList.add('show');
   };
   window.hideGridPopup=function(){if(popup)popup.classList.remove('show');if(overlay)overlay.classList.remove('show');};
