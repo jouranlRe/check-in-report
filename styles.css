@@ -157,7 +157,7 @@ th,td{padding:6px 4px}
 
 /* --- 表格排序 --- */
 .sortable, .sortable-th {
-  cursor: pointer; user-select: none; position: relative; padding-right: 18px !important;
+  cursor: pointer; -webkit-user-select: none; user-select: none; position: relative; padding-right: 18px !important;
 }
 .sortable:hover, .sortable-th:hover { background: rgba(52,152,219,0.06); }
 .sort-arrow { font-size: 10px; margin-left: 3px; }
@@ -166,13 +166,20 @@ th,td{padding:6px 4px}
 .sort-arrow::after { content: "⇅"; color: #ccc; }
 
 /* --- 期数网格拖拽滚动 --- */
-.grid-table { cursor: grab !important; user-select: none !important; }
+.grid-table { cursor: grab !important; -webkit-user-select: none !important; user-select: none !important; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .grid-table.grabbing { cursor: grabbing !important; }
+
+/* --- 刊名列固定不动 --- */
+.grid-row { position: relative; background: #fff; }
+.grid-label {
+  position: -webkit-sticky; position: sticky; left: 0; z-index: 2;
+  background: #fff; min-width: 165px !important;
+  box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+}
+.grid-row:hover .grid-label { background: #f8f9fa; }
 
 /* --- 期数网格方块放大 --- */
 .gs { width: 18px !important; height: 18px !important; font-size: 10px !important; font-weight: 500 !important; line-height: 18px !important; border-radius: 3px !important; margin: 0 1.5px !important; }
-.grid-row { min-height: 36px !important; }
-.grid-label { min-width: 165px !important; }
 @media (max-width: 768px) { .gs { width: 15px !important; height: 15px !important; font-size: 8px !important; line-height: 15px !important; } .grid-row { min-height: 30px !important; } .grid-label { min-width: 110px !important; font-size: 12px !important; } }
 
 .gs-clickable { cursor: pointer !important; }

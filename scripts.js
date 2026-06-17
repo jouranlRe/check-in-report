@@ -132,13 +132,13 @@ function extractPct(v){var m=v.match(/(\d+(?:\.\d+)?)%/);return m?parseFloat(m[1
     ensurePopup();
     var title=el.getAttribute('title')||'第X期：未知',row=el.closest('.grid-row');
     var journalName=row?row.querySelector('.grid-label').textContent.trim():'',issueNum=el.textContent.trim(),bgColor=el.style.backgroundColor||'#d0d0d0';
-    var statusText='未到';
-    if(title.indexOf('已签收')!==-1)statusText='✓ 已签收';
-    else if(title.indexOf('合刊')!==-1)statusText='≋ 合刊';
-    else if(title.indexOf('停刊')!==-1)statusText='⊗ 停刊';
+    var statusText='未到', dateText='—';
+    if(title.indexOf('已签收')!==-1){statusText='✓ 已签收';dateText='已签收';}
+    else if(title.indexOf('合刊')!==-1){statusText='≋ 合刊';dateText='见合刊说明';}
+    else if(title.indexOf('停刊')!==-1){statusText='⊗ 停刊';dateText='停刊中';}
     document.getElementById('gpColor').textContent=issueNum;document.getElementById('gpColor').style.background=bgColor;
-    document.getElementById('gpTitle').textContent=journalName;document.getElementById('gpMeta').textContent=title;
-    document.getElementById('gpBody').innerHTML='<span class="gp-status">'+statusText+'</span>';
+    document.getElementById('gpTitle').textContent=journalName;document.getElementById('gpMeta').textContent='第'+issueNum+'期';
+    document.getElementById('gpBody').innerHTML='<div style="display:flex;flex-direction:column;gap:8px"><span class="gp-status">'+statusText+'</span><div style="font-size:13px;color:#888"><span style="color:#555;font-weight:500">到刊时间：</span>'+dateText+'</div></div>';
     popup.classList.add('show');overlay.classList.add('show');
   };
   window.hideGridPopup=function(){if(popup)popup.classList.remove('show');if(overlay)overlay.classList.remove('show');};
