@@ -30,8 +30,11 @@ new Chart(document.getElementById('trendIssuesChart'),{type:'line',data:{labels:
   if(!inp)return;
   function filter(){
     var q=inp.value.trim().toLowerCase();
-    var fixedRows=document.querySelectorAll('.grid-fixed-row');
-    var scrollRows=document.querySelectorAll('.grid-scroll-col .grid-row');
+    var activeTab=document.querySelector('#grid-cn.active,#grid-foreign.active')||document.getElementById('grid-cn');
+    var wrapper=activeTab.querySelector('.grid-wrapper'); if(!wrapper)return;
+    var fixedRows=wrapper.querySelectorAll('.grid-fixed-row');
+    var scrollRows=wrapper.querySelector('.grid-scroll-col');
+    scrollRows=scrollRows?scrollRows.querySelectorAll('.grid-row'):[];
     var vis=0;
     for(var i=0;i<fixedRows.length;i++){
       var lbl=fixedRows[i].querySelector('.grid-label-fixed');
