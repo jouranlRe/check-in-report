@@ -145,14 +145,6 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')hideGridPopu
   filterTimeline();
 })();
 
-
-
-// ========== 排架标签切换 ==========
-function switchShelf(l){
-  document.querySelectorAll('.shelf-tab').forEach(function(b){b.classList.toggle('active',b.textContent[0]===l)});
-  document.querySelectorAll('.shelf-card').forEach(function(c){c.classList.toggle('active',c.id==='shelf-'+l)});
-}
-
 // ========== 滚动监听高亮目录 ==========
 (function(){
   var items=document.querySelectorAll('.toc-item');
