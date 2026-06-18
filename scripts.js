@@ -29,45 +29,37 @@ new Chart(document.getElementById('trendIssuesChart'),{type:'line',data:{labels:
   var inp=document.getElementById('gridSearch'), clr=document.getElementById('gridSearchClear'), cnt=document.getElementById('gridSearchCount');
   if(!inp)return;
   function filter(){
-    var q=inp.value.trim().toLowerCase(), rows=document.querySelectorAll('.grid-row'), vis=0;
-    rows.forEach(function(r){
-      var lbl=r.querySelector('.grid-label');
-      if(!lbl)return;
-      if(!q||lbl.textContent.trim().toLowerCase().indexOf(q)!==-1){r.classList.remove('hidden-by-search');vis++}
-      else r.classList.add('hidden-by-search');
-    });
+    var q=inp.value.trim().toLowerCase();
+    var fixedRows=document.querySelectorAll('.grid-fixed-row');
+    var scrollRows=document.querySelectorAll('.grid-scroll-col .grid-row');
+    var vis=0;
+    for(var i=0;i<fixedRows.length;i++){
+      var lbl=fixedRows[i].querySelector('.grid-label-fixed');
+      if(!lbl)continue;
+      var match=!q||lbl.textContent.trim().toLowerCase().indexOf(q)!==-1;
+      fixedRows[i].classList.toggle('hidden-by-search',!match);
+      if(scrollRows[i])scrollRows[i].classList.toggle('hidden-by-search',!match);
+      if(match)vis++;
+    }
     clr&&clr.classList.toggle('show',q.length>0);
-    if(cnt)cnt.textContent=q?vis+' / '+rows.length:'';
+    if(cnt)cnt.textContent=q?vis+' / '+fixedRows.length:'';
   }
   var tmr;
   inp.addEventListener('input',function(){clearTimeout(tmr);tmr=setTimeout(filter,150);});
   clr&&clr.addEventListener('click',function(){inp.value='';filter();inp.focus();});
 })();
 
-// ========== 网格拖拽滚动 + 刊名列固定 ==========
+// ========== 网格拖拽滚动 ==========
 (function(){
-  document.querySelectorAll('.grid-table').forEach(function(el){
+  document.querySelectorAll('.grid-scroll-col').forEach(function(el){
     var is=false,sx=0,sl=0;
-    // 刊名列 transform 补偿（适配所有浏览器）
-    function fixLabels(){
-      var dx=el.scrollLeft;
-      el.querySelectorAll('.grid-label').forEach(function(lb){
-        lb.style.transform='translateX('+dx+'px)';
-        lb.style.WebkitTransform='translateX('+dx+'px)';
-      });
-    }
-    el.addEventListener('scroll',fixLabels);
     el.addEventListener('mousedown',function(e){
       if(e.target.closest('.gs-clickable'))return;
       is=true;el.classList.add('grabbing');sx=e.pageX-el.offsetLeft;sl=el.scrollLeft;e.preventDefault();
     });
     el.addEventListener('mouseleave',function(){is=false;el.classList.remove('grabbing');});
     el.addEventListener('mouseup',function(){is=false;el.classList.remove('grabbing');});
-    el.addEventListener('mousemove',function(e){
-      if(!is)return;
-      var x=e.pageX-el.offsetLeft;el.scrollLeft=sl-(x-sx)*1.5;
-    });
-    fixLabels(); // 初始执行
+    el.addEventListener('mousemove',function(e){if(!is)return;var x=e.pageX-el.offsetLeft;el.scrollLeft=sl-(x-sx)*1.5;});
   });
 })();
 
@@ -161,7 +153,7 @@ function extractPct(v){var m=v.match(/(\d+(?:\.\d+)?)%/);return m?parseFloat(m[1
   window.showGridDetail=function(el){
     ensurePopup();
     var title=el.getAttribute('title')||'第X期：未知',row=el.closest('.grid-row');
-    var journalName=row?row.querySelector('.grid-label').textContent.trim():'',issueNum=el.textContent.trim(),bgColor=el.style.backgroundColor||'#d0d0d0';
+    var rowIdx=Array.from(row.parentElement.children).indexOf(row);var fixedRow=document.querySelectorAll('.grid-fixed-row')[rowIdx];var journalName=fixedRow?fixedRow.querySelector('.grid-label-fixed').textContent.trim():'',issueNum=el.textContent.trim(),bgColor=el.style.backgroundColor||'#d0d0d0';
     var statusText='未到';
     if(title.indexOf('已签收')!==-1)statusText='✓ 已签收';
     else if(title.indexOf('合刊')!==-1)statusText='≋ 合刊';
