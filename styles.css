@@ -120,8 +120,8 @@ th,td{padding:6px 4px}
 .jcard.card-yellow{background:#fef9e7;border:1px solid #f9e79f}
 .jcard.card-red{background:#fdedec;border:1px solid #f5b7b1}
 .jcard.card-gray{background:#f4f4f4;border:1px solid #d5d5d5}
-.jname{font-size:12px;font-weight:500;color:#333;line-height:1.3}
-.jstats{font-size:10px;color:#666;margin-top:2px}
+.jname{font-size:13px;font-weight:500;color:#333;line-height:1.3}
+.jstats{font-size:11px;color:#666;margin-top:2px}
 .jbar{height:4px;border-radius:2px;background:#ddd;overflow:hidden;margin:4px auto 2px;max-width:80%}
 .jbar-fill{height:100%;border-radius:2px}
 .jdots{display:flex;flex-wrap:wrap;gap:1.5px;justify-content:center;margin-top:3px;line-height:1.1}

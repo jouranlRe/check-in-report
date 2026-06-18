@@ -6,7 +6,7 @@ new Chart(document.getElementById('trendIssuesChart'),{type:'line',data:{labels:
 
 // ========== 排架标签切换 ==========
 function switchShelf(l){
-  document.querySelectorAll('.tabs:not(.grid-section .tabs):not(.analysis-section .tabs):not(.detail-section .tabs) .tab').forEach(function(b,i){b.classList.toggle('active',b.textContent[0]===l)});
+  document.querySelectorAll('.tab').forEach(function(b){if(b.closest('.shelf-module'))b.classList.toggle('active',b.textContent.trim().startsWith(l))});
   document.querySelectorAll('.shelf-card').forEach(function(c){c.classList.toggle('active',c.id==='shelf-'+l)});
 }
 // ========== 标签页 location.hash ==========
@@ -47,26 +47,29 @@ function switchShelf(l){
 })();
 // ========== 网格拖拽 ==========
 (function(){
-  // 强制grid-scroll-col内容宽度溢出以确保可滚动
   var s=document.createElement('style');
   s.textContent='.grid-scroll-col{overflow-x:auto!important}.grid-scroll-col>.grid-table{min-width:140%}';
   document.head.appendChild(s);
-  // 鼠标拖拽滚动（使用pointer events兼容性好）
+  var _dragActive=false;
   document.querySelectorAll('.grid-scroll-col').forEach(function(el){
     var isDown=false,startX=0,scrollX=0;
-    el.addEventListener('pointerdown',function(e){
-      isDown=true;startX=e.clientX;scrollX=el.scrollLeft;
-      el.setPointerCapture(e.pointerId);
+    el.addEventListener('mousedown',function(e){
+      isDown=true;_dragActive=false;
+      startX=e.clientX;scrollX=el.scrollLeft;
       el.classList.add('grabbing');
     });
-    el.addEventListener('pointermove',function(e){
-      if(!isDown)return;
-      el.scrollLeft=scrollX+(startX-e.clientX);
+    el.addEventListener('mousemove',function(e){
+      if(!isDown||e.buttons!==1)return;
+      var dx=e.clientX-startX;
+      el.scrollLeft=scrollX-dx;
+      if(Math.abs(dx)>5)_dragActive=true;
     });
-    el.addEventListener('pointerup',function(){isDown=false;el.classList.remove('grabbing');});
-    el.addEventListener('pointercancel',function(){isDown=false;el.classList.remove('grabbing');});
+    el.addEventListener('mouseup',function(){isDown=false;el.classList.remove('grabbing');});
+    el.addEventListener('mouseleave',function(){isDown=false;el.classList.remove('grabbing');});
   });
-})();// ========== 表格排序 ==========
+  document.addEventListener('click',function(e){if(_dragActive){e.stopPropagation();e.stopImmediatePropagation();_dragActive=false;}},true);
+})();
+// ========= 表格排序 ==========
 function extractPct(v){var m=v.match(/(\d+(?:\.\d+)?)%/);return m?parseFloat(m[1]):NaN;}
 (function(){
 function md(cs,cm){var h=document.querySelector(cs+' .analysis-col-header');if(!h)return;h.querySelectorAll('.sortable').forEach(function(th){th.addEventListener('click',function(){var ci=parseInt(th.getAttribute('data-sort-col'),10),t=th.closest('.analysis-table');if(!t)return;var rows=Array.from(t.querySelectorAll('.analysis-row:not(.analysis-col-header)'));var d=th.getAttribute('data-sort-dir')==='asc'?'desc':'asc';th.setAttribute('data-sort-dir',d);h.querySelectorAll('.sortable').forEach(function(s){var a=s.querySelector('.sort-arrow');if(a)a.className='sort-arrow';});var ar=th.querySelector('.sort-arrow');if(ar)ar.classList.add(d);var gv=cm?cm[ci]:null;rows.sort(function(a,b){var ca=a.querySelectorAll('.analysis-col'),cb=b.querySelectorAll('.analysis-col');var va=gv?gv(ca[ci]?ca[ci].textContent.trim():''):(ca[ci]?ca[ci].textContent.trim():'');var vb=gv?gv(cb[ci]?cb[ci].textContent.trim():''):(cb[ci]?cb[ci].textContent.trim():'');var na=parseFloat(va.replace(/[^0-9.-]/g,'')),nb=parseFloat(vb.replace(/[^0-9.-]/g,''));if(!isNaN(na)&&!isNaN(nb))return d==='asc'?na-nb:nb-na;return d==='asc'?va.localeCompare(vb):vb.localeCompare(va);});rows.forEach(function(r){t.appendChild(r);});});});}
@@ -141,6 +144,8 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')hideGridPopu
   monthSel.addEventListener('change',filterTimeline);
   filterTimeline();
 })();
+
+
 
 // ========== 排架标签切换 ==========
 function switchShelf(l){
