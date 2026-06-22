@@ -84,7 +84,8 @@ var ol=null,pop=null;
 function ep(){if(pop)return;ol=document.createElement('div');ol.className='grid-popup-overlay';document.body.appendChild(ol);pop=document.createElement('div');pop.className='grid-popup';pop.innerHTML='<button class="gp-close" onclick="hideGridPopup()">\u2715</button><div class="gp-head"><div class="gp-color-indicator" id="gpColor">1</div><div><div class="gp-title" id="gpTitle"></div><div class="gp-meta" id="gpMeta"></div></div></div><div class="gp-body" id="gpBody"></div>';document.body.appendChild(pop);ol.addEventListener('click',hideGridPopup);}
 window.showGridDetail=function(el){
   ep();var t=el.getAttribute('title')||'\u7b2cX\u671f\uff1a\u672a\u77e5',r=el.closest('.grid-row');
-  var ri=Array.from(r.parentElement.children).indexOf(r);var fr=document.querySelectorAll('.grid-fixed-row')[ri];var jn=fr?fr.querySelector('.grid-label-fixed').textContent.trim():'',inm=el.textContent.trim(),bg=el.style.backgroundColor||'#d0d0d0';
+  var wrapper=r.closest('.grid-wrapper');var fixedRows=wrapper?wrapper.querySelectorAll('.grid-fixed-row'):document.querySelectorAll('.grid-fixed-row');
+  var ri=Array.from(r.parentElement.children).indexOf(r);var fr=fixedRows[ri];var jn=fr?fr.querySelector('.grid-label-fixed').textContent.trim():'',inm=el.textContent.trim(),bg=el.style.backgroundColor||'#d0d0d0';
   var st='\u672a\u5230';if(t.indexOf('\u5df2\u7b7e\u6536')!==-1)st='\u2713 \u5df2\u7b7e\u6536';else if(t.indexOf('\u5408\u520a')!==-1)st='\u224b \u5408\u520a';else if(t.indexOf('\u505c\u520a')!==-1)st='\u2297 \u505c\u520a';
   var cd='\u2014';
   (function(){
