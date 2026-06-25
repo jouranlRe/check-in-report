@@ -8,7 +8,7 @@
 | `styles.css` | 页面样式 |
 | `scripts.js` | 页面交互脚本 |
 
-> ⚠ 本目录为自动生成目录。运行 `tooltest/extract_report.py` 或 `tool/extract_report.py`（双击 `extract_report.bat`）从 `journal_report.html` 生成。手动修改将被覆盖。
+> ⚠ 本目录为自动生成目录。运`extract_report.bat从journal_report.html生成。手动修改将被覆盖。
 
 ## 概览卡片
 
