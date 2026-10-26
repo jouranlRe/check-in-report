@@ -1,8 +1,9 @@
+if(typeof Chart==='undefined'){document.write('<scr'+'ipt src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/scr'+'ipt>');}
+
 function switchAnalysisTab(t){var tabs=document.querySelectorAll('.analysis-section .tab');tabs.forEach(function(x,i){if(i==['top5','suspended','combined','overdue'].indexOf(t)){x.classList.add('active')}else{x.classList.remove('active')}});['top5','suspended','combined','overdue'].forEach(function(id){var el=document.getElementById('analysis-'+id);if(id===t){el.classList.add('active')}else{el.classList.remove('active')}})}
 function switchGridTab(t){var tabs=document.querySelectorAll('.grid-section .tab');tabs.forEach(function(x){if(x.textContent.includes(t==='cn'?'中文':'外文'))x.classList.add('active');else x.classList.remove('active')});['cn','foreign'].forEach(function(id){var el=document.getElementById('grid-'+id);if(id===t){el.classList.add('active')}else{el.classList.remove('active')}})}
-function switchDetailTab(t){var tabs=document.querySelectorAll('.detail-section .tab');tabs.forEach(function(x){if(x.textContent.includes(t==='cn'?'中文':'外文'))x.classList.add('active');else x.classList.remove('active')});['cn','foreign'].forEach(function(id){var el=document.getElementById('detail-'+id);if(id===t){el.classList.add('active')}else{el.classList.remove('active')}})}
-new Chart(document.getElementById('trendSpeciesChart'),{type:'line',data:{labels:["1\u6708", "2\u6708", "3\u6708", "4\u6708", "5\u6708", "6\u6708", "7\u6708", "8\u6708", "9\u6708", "10\u6708", "11\u6708", "12\u6708"],datasets:[{label:'中文',data:[52, 35, 87, 79, 63, 77, 1, 0, 93, 69, 0, 0],borderColor:'#3498db',backgroundColor:'rgba(52,152,219,0.08)',fill:true,tension:.4},{label:'外文',data:[2, 5, 5, 6, 5, 5, 0, 0, 6, 5, 0, 0],borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.08)',fill:true,tension:.4}]},options:{responsive:true,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
-new Chart(document.getElementById('trendIssuesChart'),{type:'line',data:{labels:["1\u6708", "2\u6708", "3\u6708", "4\u6708", "5\u6708", "6\u6708", "7\u6708", "8\u6708", "9\u6708", "10\u6708", "11\u6708", "12\u6708"],datasets:[{label:'中文',data:[75, 38, 204, 130, 71, 115, 1, 0, 349, 93, 0, 0],borderColor:'#3498db',backgroundColor:'rgba(52,152,219,0.08)',fill:true,tension:.4},{label:'外文',data:[3, 8, 14, 16, 12, 12, 0, 0, 33, 12, 0, 0],borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.08)',fill:true,tension:.4}]},options:{responsive:true,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
+new Chart(document.getElementById('trendSpeciesChart'),{type:'line',data:{labels:["1\u6708", "2\u6708", "3\u6708", "4\u6708", "5\u6708", "6\u6708", "7\u6708", "8\u6708", "9\u6708", "10\u6708", "11\u6708", "12\u6708"],datasets:[{label:'中文',data:[52, 35, 87, 79, 63, 77, 1, 0, 92, 69, 0, 0],borderColor:'#3498db',backgroundColor:'rgba(52,152,219,0.08)',fill:true,tension:.4},{label:'外文',data:[2, 5, 5, 6, 5, 5, 0, 0, 6, 5, 0, 0],borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.08)',fill:true,tension:.4}]},options:{responsive:true,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
+new Chart(document.getElementById('trendIssuesChart'),{type:'line',data:{labels:["1\u6708", "2\u6708", "3\u6708", "4\u6708", "5\u6708", "6\u6708", "7\u6708", "8\u6708", "9\u6708", "10\u6708", "11\u6708", "12\u6708"],datasets:[{label:'中文',data:[75, 38, 204, 130, 71, 115, 1, 0, 348, 93, 0, 0],borderColor:'#3498db',backgroundColor:'rgba(52,152,219,0.08)',fill:true,tension:.4},{label:'外文',data:[3, 8, 14, 16, 12, 12, 0, 0, 33, 12, 0, 0],borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.08)',fill:true,tension:.4}]},options:{responsive:true,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
 
 // ========== 排架标签切换 ==========
 function switchShelf(l){
@@ -70,13 +71,51 @@ function switchShelf(l){
   document.addEventListener('click',function(e){if(_dragActive){e.stopPropagation();e.stopImmediatePropagation();_dragActive=false;}},true);
 })();
 // ========= 表格排序 ==========
-function extractPct(v){var m=v.match(/(\d+(?:\.\d+)?)%/);return m?parseFloat(m[1]):NaN;}
 (function(){
 function md(cs,cm){var h=document.querySelector(cs+' .analysis-col-header');if(!h)return;h.querySelectorAll('.sortable').forEach(function(th){th.addEventListener('click',function(){var ci=parseInt(th.getAttribute('data-sort-col'),10),t=th.closest('.analysis-table');if(!t)return;var rows=Array.from(t.querySelectorAll('.analysis-row:not(.analysis-col-header)'));var d=th.getAttribute('data-sort-dir')==='asc'?'desc':'asc';th.setAttribute('data-sort-dir',d);h.querySelectorAll('.sortable').forEach(function(s){var a=s.querySelector('.sort-arrow');if(a)a.className='sort-arrow';});var ar=th.querySelector('.sort-arrow');if(ar)ar.classList.add(d);var gv=cm?cm[ci]:null;rows.sort(function(a,b){var ca=a.querySelectorAll('.analysis-col'),cb=b.querySelectorAll('.analysis-col');var va=gv?gv(ca[ci]?ca[ci].textContent.trim():''):(ca[ci]?ca[ci].textContent.trim():'');var vb=gv?gv(cb[ci]?cb[ci].textContent.trim():''):(cb[ci]?cb[ci].textContent.trim():'');var na=parseFloat(va.replace(/[^0-9.-]/g,'')),nb=parseFloat(vb.replace(/[^0-9.-]/g,''));if(!isNaN(na)&&!isNaN(nb))return d==='asc'?na-nb:nb-na;return d==='asc'?va.localeCompare(vb):vb.localeCompare(va);});rows.forEach(function(r){t.appendChild(r);});});});}
-function mt(cs,cm){var tbl=document.querySelector(cs+' table');if(!tbl)return;tbl.querySelectorAll('th.sortable-th').forEach(function(th){th.addEventListener('click',function(){var ci=parseInt(th.getAttribute('data-sort-col'),10),tb=tbl.querySelector('tbody')||tbl;var rows=Array.from(tb.querySelectorAll('tr')).filter(function(r){return r.querySelector('td');});var d=th.getAttribute('data-sort-dir')==='asc'?'desc':'asc';th.setAttribute('data-sort-dir',d);tbl.querySelectorAll('th.sortable-th').forEach(function(s){var a=s.querySelector('.sort-arrow');if(a)a.className='sort-arrow';});var ar=th.querySelector('.sort-arrow');if(ar)ar.classList.add(d);var gv=cm?cm[ci]:null;rows.sort(function(a,b){var ca=a.querySelectorAll('td'),cb=b.querySelectorAll('td');var va=gv?gv(ca[ci]?ca[ci].textContent.trim():''):(ca[ci]?ca[ci].textContent.trim():'');var vb=gv?gv(cb[ci]?cb[ci].textContent.trim():''):(cb[ci]?cb[ci].textContent.trim():'');var na=parseFloat(va.replace(/[^0-9.-]/g,'')),nb=parseFloat(vb.replace(/[^0-9.-]/g,''));if(!isNaN(na)&&!isNaN(nb))return d==='asc'?na-nb:nb-na;return d==='asc'?va.localeCompare(vb):vb.localeCompare(va);});rows.forEach(function(r){tb.appendChild(r);});});});}
 md('#analysis-top5');md('#analysis-suspended');md('#analysis-combined');md('#analysis-overdue');
-mt('#detail-cn',{2:function(v){return String(extractPct(v));}});
-mt('#detail-foreign',{2:function(v){return String(extractPct(v));}});
+// 明细表已并入网格，排序改由「网格列头排序」处理
+})();
+// ========= 网格列头排序（原明细表的排序能力并入网格） =========
+(function(){
+  function init(){
+    document.querySelectorAll('.grid-wrapper').forEach(function(w){
+      var head=w.querySelector('.grid-fixed-head');
+      if(!head||head.getAttribute('data-bound'))return;
+      head.setAttribute('data-bound','1');
+      head.querySelectorAll('.sortable-gh').forEach(function(th){
+        th.addEventListener('click',function(){
+          var key=th.getAttribute('data-sort');
+          var dir=th.getAttribute('data-dir')==='asc'?'desc':'asc';
+          head.querySelectorAll('.sortable-gh').forEach(function(s){
+            s.removeAttribute('data-dir');
+            var a=s.querySelector('.sort-arrow');if(a)a.className='sort-arrow';
+          });
+          th.setAttribute('data-dir',dir);
+          var ar=th.querySelector('.sort-arrow');if(ar)ar.className='sort-arrow '+dir;
+          var fc=w.querySelector('.grid-fixed-col'),tb=w.querySelector('.grid-scroll-col .grid-table');
+          if(!fc||!tb)return;
+          var fr=Array.from(fc.querySelectorAll('.grid-fixed-row'));
+          var sr=Array.from(tb.querySelectorAll('.grid-row'));
+          var pairs=fr.map(function(f,i){return {f:f,s:sr[i],k:f.getAttribute('data-'+key)||''};});
+          var isNum=(key==='pct');
+          pairs.sort(function(a,b){
+            var va=a.k,vb=b.k;
+            if(isNum){
+              va=parseFloat(va);vb=parseFloat(vb);
+              if(isNaN(va))va=-1;if(isNaN(vb))vb=-1;
+              if((va<0)!==(vb<0))return va<0?1:-1;
+              return dir==='asc'?va-vb:vb-va;
+            }
+            va=String(va);vb=String(vb);
+            return dir==='asc'?va.localeCompare(vb):vb.localeCompare(va);
+          });
+          pairs.forEach(function(p){fc.appendChild(p.f);if(p.s)tb.appendChild(p.s);});
+        });
+      });
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 // ========== 网格交互 ==========
 (function(){
@@ -95,7 +134,7 @@ window.showGridDetail=function(el){
     var candidates=[inm];
     if(inm.indexOf('-')>0){var parts=inm.split('-');candidates.push(parts[0]+','+parts[1]);candidates=candidates.concat(parts);}
     for(var i=0;i<its.length;i++){
-      var txt=its[i].textContent.trim(),nm=txt.split(':')[0].trim().toLowerCase();
+      var txt=its[i].textContent.trim(),nm=(its[i].getAttribute('data-name')||txt.split(/[:：]/)[0]).trim().toLowerCase();
       if(nm!==n)continue;
       for(var ci=0;ci<candidates.length;ci++){
         if(txt.indexOf(candidates[ci])!==-1){
@@ -124,17 +163,20 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')hideGridPopu
     d.setAttribute('data-orig',d.textContent);
   });
   Array.from(months).sort().forEach(function(m){var opt=document.createElement('option');opt.value=m;opt.textContent=m.replace('-','\u5e74')+'\u6708';monthSel.appendChild(opt);});
-  function extractName(text){return text.split(':')[0].trim().toLowerCase();}
+  function extractName(text,el){
+    var n=el?el.getAttribute('data-name'):null;
+    return (n||text.split(/[:：]/)[0]).trim().toLowerCase();
+  }
   function filterTimeline(){
     var q=search.value.trim().toLowerCase(),mo=monthSel.value,totalSpecies=new Set(),totalCount=0;
     dateHeaders.forEach(function(dateEl){
       var wrapper=dateEl.nextElementSibling,items=wrapper?wrapper.querySelectorAll('.timeline-item'):[],visibleCount=0,visibleSpecies=new Set();
       items.forEach(function(item){
-        var name=extractName(item.textContent),show=true;
+        var name=extractName(item.textContent,item),show=true;
         if(q&&name.indexOf(q)===-1)show=false;
         if(mo){var m2=dateEl.textContent.match(/^(\d{4})[\-\u5e74](\d{1,2})/);if(!m2||(m2[1]+'-'+m2[2])!==mo)show=false;}
         item.classList.toggle('hidden-by-tl',!show);
-        if(show){visibleCount++;visibleSpecies.add(name);}
+        if(show){visibleCount+=parseInt(item.getAttribute('data-count')||'1',10);visibleSpecies.add(name);}
       });
       var orig=dateEl.getAttribute('data-orig')||dateEl.textContent;
       dateEl.textContent=(q||mo)?orig.replace(/\uff08\d+\uff09/,'\uff08'+visibleCount+'\uff09'):orig;
